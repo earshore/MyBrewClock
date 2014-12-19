@@ -4,6 +4,8 @@ import com.ear.brewclock.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +44,9 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		switch(item.getItemId()) {
 		case R.id.save_tea:
 			if(saveTea()) {
-				Toast.makeText(this, getString(R.string.save_tea_success, teaName.getText().toString()), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.save_tea_success, 
+						teaName.getText().toString()), 
+						Toast.LENGTH_SHORT).show();
 				teaName.setText("");
 			}
 
@@ -54,7 +58,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		// TODO Detect change in progress
 		if(seekBar == brewTimeSeekBar) {
 			// Update the brew time label with the chosen value.
-			brewTimeLabel.setText((progress + 1) + " m");
+			brewTimeLabel.setText((progress ) + " m");
 		}
 	}
 
@@ -64,13 +68,42 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 	public boolean saveTea() {
 		// Read values from the interface
 		String teaNameText = teaName.getText().toString();
-		int brewTimeValue = brewTimeSeekBar.getProgress() + 1;
-
+		int brewTimeValue = brewTimeSeekBar.getProgress();
+		
+		// Validate a brewTimeValue has been entered for the tea
+		if(brewTimeValue <= 0)
+		{
+			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+			dialog.setTitle(R.string.invalid_tea_title);
+			dialog.setMessage(R.string.invalid_brew_Time_Value);  //在res/values目录下的string.xml文件里新建一个项目
+			dialog.setPositiveButton("Ok",null);
+			dialog.setNegativeButton("Cancel",new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					AddTeaActivity.this.finish();
+				}
+			}); 
+			dialog.show();
+			
+			return false;
+			
+		}
+		else {}
+		
 		// Validate a name has been entered for the tea
 		if(teaNameText.length() < 2) {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 			dialog.setTitle(R.string.invalid_tea_title);
 			dialog.setMessage(R.string.invalid_tea_no_name);
+			dialog.setPositiveButton("Ok",null); 
+			dialog.setNegativeButton("Cancel",new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					AddTeaActivity.this.finish();
+				}
+			}); 
 			dialog.show();
 
 			return false;

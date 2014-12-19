@@ -39,10 +39,11 @@ public final class R {
         public static final int app_name=0x7f040001;
         public static final int brew_time_label=0x7f040004;
         public static final int hello=0x7f040000;
+        public static final int invalid_brew_Time_Value=0x7f040008;
         public static final int invalid_tea_no_name=0x7f040007;
         public static final int invalid_tea_title=0x7f040006;
         public static final int save_tea_label=0x7f040005;
-        public static final int save_tea_success=0x7f040008;
+        public static final int save_tea_success=0x7f040009;
         public static final int tea_name_label=0x7f040003;
     }
 }

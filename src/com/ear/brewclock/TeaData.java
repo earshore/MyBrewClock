@@ -28,8 +28,7 @@ public class TeaData extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		// CREATE TABLE teas (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, brew_time INTEGER);
-		String sql =
-				"CREATE TABLE " + TABLE_NAME + " ("
+		String sql =	"CREATE TABLE " + TABLE_NAME + " ("
 						+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 						+ NAME + " TEXT NOT NULL, "
 						+ BREW_TIME + " INTEGER"
@@ -67,5 +66,4 @@ public class TeaData extends SQLiteOpenHelper {
 		SQLiteDatabase db = getReadableDatabase();
 		return DatabaseUtils.queryNumEntries(db, TABLE_NAME);
 	}
-
 }

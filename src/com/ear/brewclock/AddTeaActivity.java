@@ -10,18 +10,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
 public class AddTeaActivity extends Activity implements OnSeekBarChangeListener {
 	protected EditText teaName;
 	protected SeekBar brewTimeSeekBar;
 	protected TextView brewTimeLabel;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,6 +32,15 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		brewTimeSeekBar.setOnSeekBarChangeListener(this);
 
 	}
+
+	public void SaveTea(View view) { // Save Buttom
+		saveTea();
+	}
+
+	public void CancelSaveTea(View view1) { // Cancel Buttom
+		AddTeaActivity.this.finish();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -39,79 +48,69 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 
 		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
+		switch (item.getItemId()) { // AddTeaActivity只添加两个目录选项
 		case R.id.save_tea:
-			if(saveTea()) {
-				Toast.makeText(this, getString(R.string.save_tea_success, 
-						teaName.getText().toString()), 
-						Toast.LENGTH_SHORT).show();
+			if (saveTea()) {
+				Toast.makeText(
+						this,
+						getString(R.string.save_tea_success, teaName.getText()
+								.toString()), Toast.LENGTH_SHORT).show();
 				teaName.setText("");
 			}
-
+			return true;
+		case R.id.exit:
+			finish();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
 		// TODO Detect change in progress
-		if(seekBar == brewTimeSeekBar) {
+		if (seekBar == brewTimeSeekBar) {
 			// Update the brew time label with the chosen value.
-			brewTimeLabel.setText((progress ) + " m");
+			brewTimeLabel.setText((progress + 1) + " m\n");
 		}
 	}
 
-	public void onStartTrackingTouch(SeekBar seekBar) {}
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
 
-	public void onStopTrackingTouch(SeekBar seekBar) {}
+	public void onStopTrackingTouch(SeekBar seekBar) {
+	}
+
 	public boolean saveTea() {
 		// Read values from the interface
 		String teaNameText = teaName.getText().toString();
-		int brewTimeValue = brewTimeSeekBar.getProgress();
-		
-		// Validate a brewTimeValue has been entered for the tea
-		if(brewTimeValue <= 0)
-		{
-			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-			dialog.setTitle(R.string.invalid_tea_title);
-			dialog.setMessage(R.string.invalid_brew_Time_Value);  //在res/values目录下的string.xml文件里新建一个项目
-			dialog.setPositiveButton("Ok",null);
-			dialog.setNegativeButton("Cancel",new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-					// TODO Auto-generated method stub
-					AddTeaActivity.this.finish();
-				}
-			}); 
-			dialog.show();
-			
-			return false;
-			
-		}
-		else {}
-		
-		// Validate a name has been entered for the tea
-		if(teaNameText.length() < 2) {
-			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-			dialog.setTitle(R.string.invalid_tea_title);
-			dialog.setMessage(R.string.invalid_tea_no_name);
-			dialog.setPositiveButton("Ok",null); 
-			dialog.setNegativeButton("Cancel",new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-					// TODO Auto-generated method stub
-					AddTeaActivity.this.finish();
-				}
-			}); 
-			dialog.show();
+		int brewTimeValue = brewTimeSeekBar.getProgress() + 1;
 
+		// Validate a name has been entered for the tea
+		if (teaNameText.length() < 2) {
+			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+			dialog.setTitle(R.string.invalid_tea_title);
+			dialog.setPositiveButton("Ok", null);
+			dialog.setNegativeButton("Cancel", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					AddTeaActivity.this.finish();
+				}
+			});
+			dialog.setMessage(R.string.invalid_tea_no_name);
+			dialog.show();
 			return false;
 		}
+		// Right issue entered for the tea
 		TeaData teaData = new TeaData(this);
 		teaData.insert(teaNameText, brewTimeValue);
 		teaData.close();
-
+		AddTeaActivity.this.finish();
 		return true;
+
 	}
 }

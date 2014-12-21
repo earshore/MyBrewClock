@@ -11,20 +11,29 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
+        public static final int action_search=0x7f020000;
+        public static final int ic_drawer=0x7f020001;
+        public static final int icon=0x7f020002;
     }
     public static final class id {
-        public static final int add_tea=0x7f06000a;
-        public static final int brew_count_label=0x7f060003;
-        public static final int brew_start=0x7f060008;
-        public static final int brew_time=0x7f060006;
-        public static final int brew_time_down=0x7f060005;
+        public static final int about=0x7f060011;
+        public static final int action_search=0x7f06000f;
+        public static final int add_tea=0x7f060010;
+        public static final int brew_count_label=0x7f060007;
+        public static final int brew_start=0x7f06000c;
+        public static final int brew_time=0x7f06000a;
+        public static final int brew_time_down=0x7f060009;
         public static final int brew_time_seekbar=0x7f060001;
-        public static final int brew_time_up=0x7f060007;
+        public static final int brew_time_up=0x7f06000b;
         public static final int brew_time_value=0x7f060002;
-        public static final int save_tea=0x7f060009;
+        public static final int cancel_save_tea=0x7f060004;
+        public static final int content_frame=0x7f060006;
+        public static final int drawer_layout=0x7f060005;
+        public static final int exit=0x7f06000e;
+        public static final int left_drawer=0x7f06000d;
+        public static final int save_tea=0x7f060003;
         public static final int tea_name=0x7f060000;
-        public static final int tea_spinner=0x7f060004;
+        public static final int tea_spinner=0x7f060008;
     }
     public static final class layout {
         public static final int add_tea=0x7f030000;
@@ -35,15 +44,20 @@ public final class R {
         public static final int main=0x7f050001;
     }
     public static final class string {
-        public static final int add_tea_label=0x7f040002;
-        public static final int app_name=0x7f040001;
-        public static final int brew_time_label=0x7f040004;
+        public static final int about_content=0x7f040002;
+        public static final int about_label=0x7f040001;
+        public static final int add_tea_label=0x7f040008;
+        public static final int app_name=0x7f040004;
+        public static final int app_not_available=0x7f040007;
+        public static final int brew_time_label=0x7f04000a;
+        public static final int exit_label=0x7f040003;
         public static final int hello=0x7f040000;
-        public static final int invalid_brew_Time_Value=0x7f040008;
-        public static final int invalid_tea_no_name=0x7f040007;
-        public static final int invalid_tea_title=0x7f040006;
-        public static final int save_tea_label=0x7f040005;
-        public static final int save_tea_success=0x7f040009;
-        public static final int tea_name_label=0x7f040003;
+        public static final int invalid_tea_no_name=0x7f04000d;
+        public static final int invalid_tea_title=0x7f04000c;
+        public static final int save_tea_label=0x7f04000b;
+        public static final int save_tea_success=0x7f04000e;
+        public static final int search_hint=0x7f040006;
+        public static final int search_tea_label=0x7f040005;
+        public static final int tea_name_label=0x7f040009;
     }
 }

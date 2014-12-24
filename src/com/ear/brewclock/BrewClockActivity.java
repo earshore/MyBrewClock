@@ -1,6 +1,6 @@
 package com.ear.brewclock;
 
-import com.ear.brewclock.R;
+import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,7 +8,10 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -27,6 +30,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ear.sysapplication.SysApplicationActivity;
 
 @SuppressWarnings("deprecation")
 public class BrewClockActivity extends Activity implements OnClickListener,
@@ -48,13 +53,13 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	protected TeaData teaData;
 	protected static final String SHARED_PREFS_NAME = "brew_count_preferences";
 	protected static final String BREW_COUNT_SHARED_PREF = "brew_count";
+	MediaPlayer mediaPlayer = new MediaPlayer();// 这个我定义了一个成员函数
 
 	/** Called when the activity is first created. */
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
 		SysApplicationActivity.getInstance().addActivity(this);
 
 		// Connect interface elements to properties
@@ -90,9 +95,32 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		teaCursorAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		teaSpinner.setOnItemSelectedListener(this);
-		//
+
 		// getActionBar().setHomeButtonEnabled(true);
 
+		TextView textView = new TextView(this);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer
+				.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+					@Override
+					public void onCompletion(MediaPlayer player) {
+						player.seekTo(0);
+					}
+				});
+		AssetFileDescriptor file = this.getResources().openRawResourceFd(
+				R.raw.beep);
+		try {
+			mediaPlayer.setDataSource(file.getFileDescriptor(),
+					file.getStartOffset(), file.getLength());
+			file.close();
+			// mediaPlayer.setVolume(BEEP_VOLUME,BEEP_VOLUME);
+			mediaPlayer.prepare();
+		} catch (IOException ioe) {
+			textView.setText("Couldn't load music file, " + ioe.getMessage());
+			// Log.w(TAG, ioe);
+			mediaPlayer = null;
+		}
 	}
 
 	/** Methods **/
@@ -115,7 +143,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		// getActionBar().setDisplayHomeAsUpEnabled(true); //
 		// ActionBar添加返回上个Activity
 		// …
-
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) { // 重写Activity中onKeyDown方法
@@ -144,7 +171,7 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	@SuppressLint("HandlerLeak")
 	Handler mHandler = new Handler() { // 根据exit()方法中的的消息，写一个Handler
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+			// TODO Auto-generated method stu b
 			super.handleMessage(msg);
 			isExit = false;
 		}
@@ -153,12 +180,9 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	public void setBrewTime(int minutes) {
 		if (isBrewing)
 			return;
-
 		brewTime = minutes;
-
 		if (brewTime < 1)
 			brewTime = 1;
-
 		brewTimeLabel.setText(String.valueOf(brewTime) + "m");
 	}
 
@@ -177,7 +201,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				SHARED_PREFS_NAME, MODE_PRIVATE).edit();
 		editor.putInt(BREW_COUNT_SHARED_PREF, brewCount);
 		editor.commit();
-
 	}
 
 	/**
@@ -198,6 +221,9 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				setBrewCount(brewCount + 1);
 				brewTimeLabel.setText("Brew Up!");
 
+				if (mediaPlayer != null) {
+					mediaPlayer.start();
+				}
 				// Vibrator
 				Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 				// 1. 振动为1000毫秒，既1秒
@@ -210,7 +236,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				startBrew.setText("Start");
 			}
 		};
-
 		brewCountDownTimer.start();
 		startBrew.setText("Stop");
 		isBrewing = true;
@@ -222,7 +247,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	public void stopBrew() {
 		if (brewCountDownTimer != null)
 			brewCountDownTimer.cancel();
-
 		isBrewing = false;
 		startBrew.setText("Start");
 	}
@@ -254,7 +278,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			setBrewTime(cursor.getInt(2));
 			teaName = cursor.getString(1); // 搜索茶叶信息，亮点！！！！
 			getActionBar().setTitle(teaName); // actionbar设置标题为茶名
-
 		}
 	}
 
@@ -288,7 +311,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(this, AddTeaActivity.class);
 			startActivity(intent);
 			return true;
-
 		case R.id.about:
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 			dialog.setTitle(R.string.about_label);
@@ -308,8 +330,7 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			// 设置要默认发送的内容
 			email.putExtra(android.content.Intent.EXTRA_TEXT, emailBody);
 			// 调用系统的邮件系统
-			startActivity(Intent.createChooser(email,
-					"Choose a way to email."));
+			startActivity(Intent.createChooser(email, "Choose a way to email."));
 			return true;
 		case R.id.exit:
 			finish();
@@ -319,5 +340,4 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		}
 
 	}
-
 }

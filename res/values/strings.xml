@@ -7,8 +7,7 @@
         						earshore add some new features on it, for example, search tea,
         						exitby2click, back in ActionBar, save tea buttoms, holo theme, 
         						and so on, thanks to cblunt.\n</string>
-   <string name="feedback_label">Feedback</string>
-   
+    <string name="feedback_label">Feedback</string>
     <string name="exit_label">Exit</string>
     <string name="app_name">BrewClock</string>
     <string name="search_tea_label">Search Tea Knowledge</string>
@@ -21,6 +20,6 @@
     <string name="invalid_tea_title">Tea could not be saved.</string>
     <string name="invalid_tea_no_name">Enter a name for your tea.</string>
     <string name="save_tea_success">%s tea has been saved.</string>
-    
+    <string name="input_hint">\tDo not input the word "tea".</string>
 
 </resources>

@@ -12,19 +12,20 @@ import android.provider.BaseColumns;
 public class TeaData extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "teas.db";
 	private static final int DATABASE_VERSION = 1;
-
 	public static final String TABLE_NAME = "teas";
-
 	public static final String _ID = BaseColumns._ID;
 	public static final String NAME = "name";
 	public static final String BREW_TIME = "brew_time";
-	public String getName(){
+
+	public String getName() {
 		return NAME;
 	}
+
 	public TeaData(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		// TODO Auto-generated constructor stub
 	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub

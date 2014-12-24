@@ -1,40 +1,53 @@
 package com.ear.brewclock;
 
-import com.ear.brewclock.R;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.ear.sysapplication.SysApplicationActivity;
 
+@SuppressLint("CutPasteId")
 public class AddTeaActivity extends Activity implements OnSeekBarChangeListener {
 	protected EditText teaName;
 	protected SeekBar brewTimeSeekBar;
 	protected TextView brewTimeLabel;
 
-	@Override
+	private static final String[] teanames = new String[] { "Tie Guan Yin", "Oolong",
+			"Da Hong Pao", "Loose", "Masala chai", "Blooming", "Wu Long", "Pu'er",
+			"Tisanes","Black" };
+	private AutoCompleteTextView autoCompleteTextView = null;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SysApplicationActivity.getInstance().addActivity(this);
-
 		setContentView(R.layout.add_tea);
+
 		teaName = (EditText) findViewById(R.id.tea_name);
 		brewTimeSeekBar = (SeekBar) findViewById(R.id.brew_time_seekbar);
 		brewTimeLabel = (TextView) findViewById(R.id.brew_time_value);
 		brewTimeSeekBar.setOnSeekBarChangeListener(this);
 
+		autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.tea_name);
+
+		// 创建适配器
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, teanames);
+		autoCompleteTextView.setAdapter(adapter);
+		// 设置输入多少字符后提示，默认值为2
+		autoCompleteTextView.setThreshold(2);
 	}
 
 	public void SaveTea(View view) { // Save Buttom
@@ -45,7 +58,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		AddTeaActivity.this.finish();
 	}
 
-	@Override
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.add_tea, menu);
@@ -53,7 +66,6 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		return true;
 	}
 
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) { // AddTeaActivity只添加两个目录选项
 		case R.id.save_tea:
@@ -66,7 +78,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 			}
 			return true;
 		case R.id.exit:
-			SysApplicationActivity.getInstance().exit();	//杀掉所有activity,退出程序
+			SysApplicationActivity.getInstance().exit(); // 杀掉所有activity,退出程序
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -122,4 +134,5 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 		return true;
 
 	}
+
 }

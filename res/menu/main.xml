@@ -7,12 +7,11 @@
         android:icon="@drawable/action_search"
         android:showAsAction="ifRoom"
         android:title="@string/search_tea_label"/>
- 
-    <!--  Settings, should always be in the overflow  -->
+     <!--  Settings, should always be in the overflow  -->
     <item
         android:id="@+id/add_tea"
         android:title="@string/add_tea_label"/>
-    <item
+     <item
         android:id="@+id/feedback"
         android:title="@string/feedback_label"/>
     <item

@@ -1,13 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/snow" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -21,18 +28,25 @@
                 android:padding="10dip" >
 
                 <TextView
+                    android:id="@+id/brew_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:elevation="5dp"
                     android:text="Brews: "
-                    android:textSize="25dip" />
+                    android:textSize="27sp"
+                    android:theme="@style/LabelStyle" />
 
                 <TextView
                     android:id="@+id/brew_count_label"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:elevation="5dp"
                     android:gravity="right"
                     android:text="None"
-                    android:textSize="25dip" />
+                    android:textSize="27sp"
+                    android:theme="@style/LabelStyle" />
             </LinearLayout>
 
             <LinearLayout
@@ -42,14 +56,15 @@
 
                 <Spinner
                     android:id="@+id/tea_spinner"
+                    style="?android:attr/spinnerDropDownItemStyle"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="25sp"/>
+                    android:layout_height="50dp"
+                    android:textSize="25sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dip"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -59,8 +74,10 @@
                     android:id="@+id/brew_time_down"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/darkcyuan"
                     android:text="-"
-                    android:textSize="40dip" />
+                    android:textColor="@color/snow"
+                    android:textSize="40sp" />
 
                 <TextView
                     android:id="@+id/brew_time"
@@ -68,14 +85,17 @@
                     android:layout_height="wrap_content"
                     android:padding="10dip"
                     android:text="0:00"
-                    android:textSize="35dip" />
+                    android:textColor="@color/black"
+                    android:textSize="35sp" />
 
                 <Button
                     android:id="@+id/brew_time_up"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/darkcyuan"
                     android:text="+"
-                    android:textSize="40dip" />
+                    android:textColor="@color/snow"
+                    android:textSize="40sp" />
             </LinearLayout>
 
             <Button
@@ -83,19 +103,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:background="@color/darkcyuan"
                 android:text="Start"
-                android:textSize="40dip" />
+                android:textColor="@color/white"
+                android:textSize="40sp" />
         </LinearLayout>
     </FrameLayout>
 
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#FFF"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
-
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

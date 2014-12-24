@@ -1,6 +1,6 @@
 package com.ear.brewclock;
 
-import com.ear.brewclock.R;
+import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,11 +8,15 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +31,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ear.sysapplication.SysApplicationActivity;
+
+@SuppressWarnings("deprecation")
 public class BrewClockActivity extends Activity implements OnClickListener,
 		OnItemSelectedListener {
 	/** Properties **/
@@ -37,7 +44,7 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	protected TextView brewTimeLabel;
 	protected String teaName;
 
-	protected boolean isExit; // ¶¨ÒåÒ»¸ö±äÁ¿£¬ÓÃÓÚ±êÊ¶ÊÇ·ñÍË³ö
+	protected boolean isExit; // å®šä¹‰ä¸€ä¸ªå˜é‡ï¼Œç”¨äºæ ‡è¯†æ˜¯å¦é€€å‡º
 	protected int brewTime = 3;
 	protected CountDownTimer brewCountDownTimer;
 	protected int brewCount = 0;
@@ -46,12 +53,14 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	protected TeaData teaData;
 	protected static final String SHARED_PREFS_NAME = "brew_count_preferences";
 	protected static final String BREW_COUNT_SHARED_PREF = "brew_count";
+	MediaPlayer mediaPlayer = new MediaPlayer();// è¿™ä¸ªæˆ‘å®šä¹‰äº†ä¸€ä¸ªæˆå‘˜å‡½æ•°
 
 	/** Called when the activity is first created. */
-	@Override
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		SysApplicationActivity.getInstance().addActivity(this);
 
 		// Connect interface elements to properties
 		brewAddTime = (Button) findViewById(R.id.brew_time_up);
@@ -78,7 +87,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		}
 		Cursor cursor = teaData.all(this);
 
-		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter teaCursorAdapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item, cursor,
 				new String[] { TeaData.NAME }, new int[] { android.R.id.text1 });
@@ -88,6 +96,31 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		teaSpinner.setOnItemSelectedListener(this);
 
+		// getActionBar().setHomeButtonEnabled(true);
+
+		TextView textView = new TextView(this);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer
+				.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+					@Override
+					public void onCompletion(MediaPlayer player) {
+						player.seekTo(0);
+					}
+				});
+		AssetFileDescriptor file = this.getResources().openRawResourceFd(
+				R.raw.beep);
+		try {
+			mediaPlayer.setDataSource(file.getFileDescriptor(),
+					file.getStartOffset(), file.getLength());
+			file.close();
+			// mediaPlayer.setVolume(BEEP_VOLUME,BEEP_VOLUME);
+			mediaPlayer.prepare();
+		} catch (IOException ioe) {
+			textView.setText("Couldn't load music file, " + ioe.getMessage());
+			// Log.w(TAG, ioe);
+			mediaPlayer = null;
+		}
 	}
 
 	/** Methods **/
@@ -100,19 +133,19 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	 *            The number of minutes to brew.
 	 */
 	public void onCreate() {
-		// ¡­
+		// â€¦
 
 		// Set the initial brew values
 		SharedPreferences sharedPreferences = getSharedPreferences(
 				SHARED_PREFS_NAME, MODE_PRIVATE);
 		brewCount = sharedPreferences.getInt(BREW_COUNT_SHARED_PREF, 0);
 		setBrewCount(brewCount);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		// ¡­
-
+		// getActionBar().setDisplayHomeAsUpEnabled(true); //
+		// ActionBaræ·»åŠ è¿”å›ä¸Šä¸ªActivity
+		// â€¦
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) { // ÖØĞ´ActivityÖĞonKeyDown·½·¨
+	public boolean onKeyDown(int keyCode, KeyEvent event) { // é‡å†™Activityä¸­onKeyDownæ–¹æ³•
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			exit();
 			return false;
@@ -121,10 +154,10 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public void exit() { // Ğ´Ò»¸öÍË³ö·½·¨£¬Ãû³Æ¾ÍÊÇonKeyDownÖĞµÄexit()
+	public void exit() { // å†™ä¸€ä¸ªé€€å‡ºæ–¹æ³•ï¼Œåç§°å°±æ˜¯onKeyDownä¸­çš„exit()
 		if (!isExit) {
 			isExit = true;
-			Toast.makeText(getApplicationContext(), "ÔÙ°´Ò»´ÎÍË³ö³ÌĞò",
+			Toast.makeText(getApplicationContext(), "Press again to exit.",
 					Toast.LENGTH_SHORT).show();
 			mHandler.sendEmptyMessageDelayed(0, 2000);
 		} else {
@@ -136,9 +169,9 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	}
 
 	@SuppressLint("HandlerLeak")
-	Handler mHandler = new Handler() { // ¸ù¾İexit()·½·¨ÖĞµÄµÄÏûÏ¢£¬Ğ´Ò»¸öHandler
+	Handler mHandler = new Handler() { // æ ¹æ®exit()æ–¹æ³•ä¸­çš„çš„æ¶ˆæ¯ï¼Œå†™ä¸€ä¸ªHandler
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+			// TODO Auto-generated method stu b
 			super.handleMessage(msg);
 			isExit = false;
 		}
@@ -147,12 +180,9 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	public void setBrewTime(int minutes) {
 		if (isBrewing)
 			return;
-
 		brewTime = minutes;
-
 		if (brewTime < 1)
 			brewTime = 1;
-
 		brewTimeLabel.setText(String.valueOf(brewTime) + "m");
 	}
 
@@ -171,7 +201,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				SHARED_PREFS_NAME, MODE_PRIVATE).edit();
 		editor.putInt(BREW_COUNT_SHARED_PREF, brewCount);
 		editor.commit();
-
 	}
 
 	/**
@@ -192,10 +221,21 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 				setBrewCount(brewCount + 1);
 				brewTimeLabel.setText("Brew Up!");
 
+				if (mediaPlayer != null) {
+					mediaPlayer.start();
+				}
+				// Vibrator
+				Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+				// 1. æŒ¯åŠ¨ä¸º1000æ¯«ç§’ï¼Œæ—¢1ç§’
+				long milliseconds = 1000;
+				vibrator.vibrate(milliseconds);
+				// 2. æŒ¯åŠ¨æ¨¡å¼ï¼šæ‰‹æœºç­‰å¾…0ç§’å°±å¼€å§‹éœ‡åŠ¨1ç§’ï¼Œå†ç­‰å¾…0.8ç§’ï¼Œå¼€å§‹éœ‡åŠ¨1ç§’
+				long[] pattern = { 0, 1000, 800, 1000, 800, 1000 }; // OFF/ON/OFF/ON......
+				vibrator.vibrate(pattern, -1);
+
 				startBrew.setText("Start");
 			}
 		};
-
 		brewCountDownTimer.start();
 		startBrew.setText("Stop");
 		isBrewing = true;
@@ -207,7 +247,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	public void stopBrew() {
 		if (brewCountDownTimer != null)
 			brewCountDownTimer.cancel();
-
 		isBrewing = false;
 		startBrew.setText("Start");
 	}
@@ -234,16 +273,17 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	public void onItemSelected(AdapterView<?> spinner, View view, int position,
 			long id) {
 		if (spinner == teaSpinner) {
-			// Update the brew time with the selected tea¡¯s brewtime
+			// Update the brew time with the selected teaâ€™s brewtime
 			Cursor cursor = (Cursor) spinner.getSelectedItem();
 			setBrewTime(cursor.getInt(2));
-			teaName = cursor.getString(1); // ËÑË÷²èÒ¶ĞÅÏ¢£¬ÁÁµã£¡£¡£¡£¡
-
+			teaName = cursor.getString(1); // æœç´¢èŒ¶å¶ä¿¡æ¯ï¼Œäº®ç‚¹ï¼ï¼ï¼ï¼
+			getActionBar().setTitle(teaName); // actionbarè®¾ç½®æ ‡é¢˜ä¸ºèŒ¶å
 		}
 	}
 
 	public void onNothingSelected(AdapterView<?> adapterView) {
 		// Do nothing
+		getActionBar().setTitle("BrewClock");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -252,13 +292,13 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		return true;
 	}
 
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
 		switch (item.getItemId()) {
 		case R.id.action_search:
 			Intent intentas = new Intent(Intent.ACTION_WEB_SEARCH);
-			intentas.putExtra(SearchManager.QUERY, teaName);
+			intentas.putExtra(SearchManager.QUERY, teaName + " tea");
 			// catch event that there's no activity to handle intent
 			if (intentas.resolveActivity(getPackageManager()) != null) {
 				startActivity(intentas);
@@ -268,14 +308,29 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			}
 			return true;
 		case R.id.add_tea:
-			Intent intentat = new Intent(this, AddTeaActivity.class);
-			startActivity(intentat);
+			Intent intent = new Intent(this, AddTeaActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.about:
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 			dialog.setTitle(R.string.about_label);
 			dialog.setMessage(R.string.about_content);
 			dialog.show();
+			return true;
+		case R.id.feedback:
+			Intent email = new Intent(android.content.Intent.ACTION_SEND);
+			email.setType("plain/text");
+			String[] emailReciver = new String[] { "earshore@gmail.com" };
+			String emailSubject = "BrewClock Feedback";
+			String emailBody = "";
+			// è®¾ç½®é‚®ä»¶é»˜è®¤åœ°å€
+			email.putExtra(android.content.Intent.EXTRA_EMAIL, emailReciver);
+			// è®¾ç½®é‚®ä»¶é»˜è®¤æ ‡é¢˜
+			email.putExtra(android.content.Intent.EXTRA_SUBJECT, emailSubject);
+			// è®¾ç½®è¦é»˜è®¤å‘é€çš„å†…å®¹
+			email.putExtra(android.content.Intent.EXTRA_TEXT, emailBody);
+			// è°ƒç”¨ç³»ç»Ÿçš„é‚®ä»¶ç³»ç»Ÿ
+			startActivity(Intent.createChooser(email, "Choose a way to email."));
 			return true;
 		case R.id.exit:
 			finish();
@@ -285,5 +340,4 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		}
 
 	}
-
 }

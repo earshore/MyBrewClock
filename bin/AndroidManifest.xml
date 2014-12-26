@@ -8,6 +8,7 @@
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--
 android:theme="@android:style/Theme.Material.Light.DarkActionBar" 
 android:theme="@android:style/Theme.Holo.Light.DarkActionBar"

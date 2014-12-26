@@ -3,9 +3,12 @@ package com.ear.brewclock;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
@@ -17,6 +20,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,13 +29,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ear.sysapplication.SysApplicationActivity;
+import com.ear.exit.SysApplication;
+import com.ear.share.ScreenshotTools;
 
 @SuppressWarnings("deprecation")
 public class BrewClockActivity extends Activity implements OnClickListener,
@@ -55,12 +62,14 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 	protected static final String BREW_COUNT_SHARED_PREF = "brew_count";
 	MediaPlayer mediaPlayer = new MediaPlayer();// 这个我定义了一个成员函数
 
+	Context mContext;
+
 	/** Called when the activity is first created. */
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		SysApplicationActivity.getInstance().addActivity(this);
+		setContentView(R.layout.main_activity);
+		SysApplication.getInstance().addActivity(this);
 
 		// Connect interface elements to properties
 		brewAddTime = (Button) findViewById(R.id.brew_time_up);
@@ -76,12 +85,13 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 
 		// Set the initial brew values
 		setBrewCount(0);
-		setBrewTime(3);
+		setBrewTime(1);
+
 		teaData = new TeaData(this);
 		teaSpinner = (Spinner) findViewById(R.id.tea_spinner);
 		if (teaData.count() == 0) {
 			teaData.insert("Earl Grey", 3);
-			teaData.insert("Assam", 3);
+			teaData.insert("Assam", 1);
 			teaData.insert("Jasmine Green", 1);
 			teaData.insert("Darjeeling", 2);
 		}
@@ -90,8 +100,8 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		SimpleCursorAdapter teaCursorAdapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item, cursor,
 				new String[] { TeaData.NAME }, new int[] { android.R.id.text1 });
-
 		teaSpinner.setAdapter(teaCursorAdapter);
+
 		teaCursorAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		teaSpinner.setOnItemSelectedListener(this);
@@ -118,9 +128,11 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			mediaPlayer.prepare();
 		} catch (IOException ioe) {
 			textView.setText("Couldn't load music file, " + ioe.getMessage());
-			// Log.w(TAG, ioe);
+			Log.w("TAG", ioe);
 			mediaPlayer = null;
 		}
+		mContext = this;
+
 	}
 
 	/** Methods **/
@@ -272,23 +284,26 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 
 	public void onItemSelected(AdapterView<?> spinner, View view, int position,
 			long id) {
+
 		if (spinner == teaSpinner) {
 			// Update the brew time with the selected tea’s brewtime
 			Cursor cursor = (Cursor) spinner.getSelectedItem();
 			setBrewTime(cursor.getInt(2));
-			teaName = cursor.getString(1); // 搜索茶叶信息，亮点！！！！
-			getActionBar().setTitle(teaName); // actionbar设置标题为茶名
+			teaName = cursor.getString(1); // 用于搜索茶叶信息
+			// getActionBar().setTitle(teaName); // actionbar设置标题为茶名
 		}
 	}
 
 	public void onNothingSelected(AdapterView<?> adapterView) {
 		// Do nothing
-		getActionBar().setTitle("BrewClock");
+		// getActionBar().setTitle("BrewClock");
+
+		brewTimeLabel.setText("BrewTime");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
 
@@ -311,6 +326,10 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(this, AddTeaActivity.class);
 			startActivity(intent);
 			return true;
+		case R.id.share:
+			ScreenshotTools.takeScreenShotToEmail(mContext,
+					BrewClockActivity.this);
+			return true;
 		case R.id.about:
 			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 			dialog.setTitle(R.string.about_label);
@@ -330,7 +349,7 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			// 设置要默认发送的内容
 			email.putExtra(android.content.Intent.EXTRA_TEXT, emailBody);
 			// 调用系统的邮件系统
-			startActivity(Intent.createChooser(email, "Choose a way to email."));
+			startActivity(Intent.createChooser(email, "Choose a way to email:"));
 			return true;
 		case R.id.exit:
 			finish();

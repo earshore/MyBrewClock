@@ -21,5 +21,6 @@
     <string name="invalid_tea_no_name">Enter a name for your tea.</string>
     <string name="save_tea_success">%s tea has been saved.</string>
     <string name="input_hint">\tDo not input the word "tea".</string>
+    <string name="share_label">Share Screen</string>
 
 </resources>

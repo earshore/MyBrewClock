@@ -17,7 +17,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.ear.sysapplication.SysApplicationActivity;
+
+import com.ear.exit.SysApplication;
 
 @SuppressLint("CutPasteId")
 public class AddTeaActivity extends Activity implements OnSeekBarChangeListener {
@@ -33,7 +34,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.add_tea);
+		setContentView(R.layout.add_tea_activity);
 
 		teaName = (EditText) findViewById(R.id.tea_name);
 		brewTimeSeekBar = (SeekBar) findViewById(R.id.brew_time_seekbar);
@@ -61,7 +62,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.add_tea, menu);
+		inflater.inflate(R.menu.add_tea_menu, menu);
 
 		return true;
 	}
@@ -78,7 +79,7 @@ public class AddTeaActivity extends Activity implements OnSeekBarChangeListener 
 			}
 			return true;
 		case R.id.exit:
-			SysApplicationActivity.getInstance().exit(); // 杀掉所有activity,退出程序
+			SysApplication.getInstance().exit(); // 杀掉所有activity,退出程序
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

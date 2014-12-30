@@ -1,0 +1,26 @@
+<resources>
+
+    <!-- inherit from the material theme -->
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+
+        <!-- Main theme colors -->
+        <!-- your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/darkcyuan</item>
+        <!-- darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/teal</item>
+        <!-- theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/darkcyuan</item>
+         <item name="android:colorControlHighlight">@color/snow</item>
+        <item name="android:navigationBarColor">@color/darkcyuan</item>
+        <item name="android:elevation">0dp</item>
+        
+    </style>
+
+    <style name="LabelStyle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+</resources>

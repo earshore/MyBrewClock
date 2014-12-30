@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BrewClockActivity">
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/snow">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dip">
+
+                <TextView
+                    android:id="@+id/brew_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="5dp"
+                    android:text="Brews: "
+                    android:textSize="27sp"
+                    android:theme="@style/LabelStyle" />
+
+                <TextView
+                    android:id="@+id/brew_count_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="5dp"
+                    android:gravity="right"
+                    android:text="None"
+                    android:textSize="27sp"
+                    android:theme="@style/LabelStyle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="0.20">
+                <TextView
+                    android:id="@+id/choose_tea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="5dp"
+                    android:text="@string/choose_label"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />"
+
+                <Spinner
+                    android:id="@+id/tea_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:spinnerMode="dropdown"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="50dip"
+                android:layout_gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/brew_time_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/brew_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip"
+                    android:text="0:00"
+                    android:textColor="@color/black"
+                    android:textSize="35sp" />
+
+                <Button
+                    android:id="@+id/brew_time_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="10dip"
+                android:layout_weight="0.50">
+
+                <Button
+                    android:id="@+id/brew_start"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:padding="20dip"
+                    android:text="Start"
+                    android:textColor="@color/black"
+                    android:textSize="40sp"
+                    android:layout_gravity="bottom"></Button>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

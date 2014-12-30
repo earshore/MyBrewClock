@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/snow"
+    android:orientation="vertical"
+    android:padding="25dip"
+    tools:context=".AddTeaActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:text="@string/tea_name_label"
+        android:textSize="18sp"
+        android:theme="@style/LabelStyle" />
+
+    <AutoCompleteTextView
+        android:id="@+id/tea_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:hint="@string/input_hint"
+        android:textCursorDrawable="@null"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:text="@string/brew_time_label"
+        android:textSize="18sp"
+        android:theme="@style/LabelStyle" />
+
+    <SeekBar
+        android:id="@+id/brew_time_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:max="9"
+        android:progress="2" />
+
+    <TextView
+        android:id="@+id/brew_time_value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="3 m\n"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/snow"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/save_tea"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            android:onClick="SaveTea"
+            android:text="Save"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/cancel_save_tea"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            android:onClick="CancelSaveTea"
+            android:text="Cancel"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+</LinearLayout>
+<!-- From: file:/E:/Codes/java%20files/MyBrewClock/app/src/main/res/layout/add_tea_activity.xml -->

@@ -3,8 +3,6 @@ package com.ear.brewclock;
 import java.io.IOException;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
@@ -20,7 +18,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,11 +26,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,7 +81,6 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		// Set the initial brew values
 		setBrewCount(0);
 		setBrewTime(1);
-
 		teaData = new TeaData(this);
 		teaSpinner = (Spinner) findViewById(R.id.tea_spinner);
 		if (teaData.count() == 0) {
@@ -97,11 +91,12 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 		}
 		Cursor cursor = teaData.all(this);
 
+	
 		SimpleCursorAdapter teaCursorAdapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item, cursor,
 				new String[] { TeaData.NAME }, new int[] { android.R.id.text1 });
 		teaSpinner.setAdapter(teaCursorAdapter);
-
+		
 		teaCursorAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		teaSpinner.setOnItemSelectedListener(this);
@@ -128,11 +123,10 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 			mediaPlayer.prepare();
 		} catch (IOException ioe) {
 			textView.setText("Couldn't load music file, " + ioe.getMessage());
-			Log.w("TAG", ioe);
+			// Log.w(TAG, ioe);
 			mediaPlayer = null;
 		}
 		mContext = this;
-
 	}
 
 	/** Methods **/
@@ -284,21 +278,18 @@ public class BrewClockActivity extends Activity implements OnClickListener,
 
 	public void onItemSelected(AdapterView<?> spinner, View view, int position,
 			long id) {
-
 		if (spinner == teaSpinner) {
 			// Update the brew time with the selected tea’s brewtime
 			Cursor cursor = (Cursor) spinner.getSelectedItem();
 			setBrewTime(cursor.getInt(2));
 			teaName = cursor.getString(1); // 用于搜索茶叶信息
-			// getActionBar().setTitle(teaName); // actionbar设置标题为茶名
+			getActionBar().setTitle(teaName); // actionbar设置标题为茶名
 		}
 	}
 
 	public void onNothingSelected(AdapterView<?> adapterView) {
 		// Do nothing
-		// getActionBar().setTitle("BrewClock");
-
-		brewTimeLabel.setText("BrewTime");
+		getActionBar().setTitle("BrewClock");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

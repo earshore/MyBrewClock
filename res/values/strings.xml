@@ -22,5 +22,6 @@
     <string name="save_tea_success">%s tea has been saved.</string>
     <string name="input_hint">\tDo not input the word "tea".</string>
     <string name="share_label">Share Screen</string>
+    <string name="choose_label">\tChoose a tea:\t</string>
 
 </resources>

@@ -459,10 +459,10 @@ public final class R {
         public static final int brew_time_up=0x7f09000e;
         public static final int brew_time_value=0x7f090003;
         public static final int cancel_save_tea=0x7f090005;
+        public static final int choose_tea=0x7f09000a;
         public static final int content_frame=0x7f090007;
         public static final int exit=0x7f090010;
         public static final int feedback=0x7f090014;
-        public static final int hint_label=0x7f09000a;
         public static final int pager=0x7f090006;
         public static final int save_tea=0x7f090004;
         public static final int share=0x7f090013;
@@ -488,6 +488,7 @@ public final class R {
         public static final int app_name=0x7f060005;
         public static final int app_not_available=0x7f060008;
         public static final int brew_time_label=0x7f06000b;
+        public static final int choose_label=0x7f060012;
         public static final int exit_label=0x7f060004;
         public static final int feedback_label=0x7f060003;
         public static final int hello=0x7f060000;
